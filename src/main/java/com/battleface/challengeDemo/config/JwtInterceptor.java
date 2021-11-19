@@ -20,6 +20,12 @@ public class JwtInterceptor implements HandlerInterceptor {
         String authHeader = request.getHeader(AUTHORIZATION_HEADER);
         String contentHeader = request.getHeader(CONTENT_HEADER);
 
+        if (request.getMethod().toUpperCase() == "OPTIONS") {
+            response.setHeader("Content-Type", "application/json");
+            response.setStatus(HttpServletResponse.SC_OK);
+            return false;
+        }
+
         if (authHeader == null || !authHeader.startsWith(BEARER_TOKEN_TYPE)) {
             request.setAttribute(ERROR_STATUS, response);
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Token type");
